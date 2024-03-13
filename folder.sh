@@ -1,0 +1,10 @@
+mkdir helpers
+mkdir db
+mkdir middleware
+mkdir services
+mkdir repositoris
+mkdir models
+mkdir controllers
+mkdir routers
+mkdir libs
+mkdir test
