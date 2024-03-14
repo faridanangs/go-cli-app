@@ -333,6 +333,10 @@ fi
 cat <<EOF
 ---------------------------------
 ✓ Penginstallan selesai
+
+Untuk menjalankannya:
+1. cd nama_package
+2. go run main.go
 ---------------------------------
 
 EOF
@@ -514,6 +518,10 @@ fi
 cat <<EOF
 ---------------------------------
 ✓ Penginstallan selesai
+
+Untuk menjalankannya
+cd nama_package
+go run main.go
 ---------------------------------
 
 EOF
