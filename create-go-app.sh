@@ -3,7 +3,8 @@ set -euo pipefail
 
 
 cat <<EOF
-$|> $(date) <|$
+
+$(date)
 EOF
 
 if [ $# -eq 0 ]; then
@@ -26,6 +27,10 @@ dirName="${packagePart[-1]%?}"
 printf "Initialize git [y/N]? "
 read -r git
 
+if [ -z "$git" ]; then
+        git="y"
+fi
+
 deps=("github.com/joho/godotenv")
 
 # choise framwork
@@ -35,8 +40,12 @@ Choose your go framwork
 2. Gin
 n. none
 EOF
-printf "[1/2/n] ~ [default=n]? "
+printf "[1/2/n] ~ [default=1]? "
 read -n1 -r framwork
+
+if [ -z "$framwork" ]; then
+        framwork="1"
+fi
 
 case $framwork in
 "1")
@@ -48,6 +57,7 @@ case $framwork in
         echo
 ;;
 *)
+        deps+=("github.com/gofiber/fiber/v2")
         echo
 ;;
 esac
@@ -58,8 +68,12 @@ Choose your orm library
 1. gorm
 n. none
 EOF
-printf "[1/n] ~ [default=n]? "
+printf "[1/n] ~ [default=1]? "
 read -n1 -r orm
+
+if [ -z "$orm" ]; then
+        orm="1"
+fi
 
 case $orm in
 "1")
@@ -67,6 +81,7 @@ case $orm in
         echo
 ;;
 *)
+        deps+=("gorm.io/gorm")
         echo
 ;;
 esac
@@ -78,8 +93,12 @@ Choose your database
 2. mySQL
 n. none
 EOF
-printf "[1/2/n] ~ [default=n]? "
+printf "[1/2] ~ [default=1]? "
 read -n1 -r database
+
+if [ -z "$database" ]; then
+        database="1"
+fi
 
 case $database in
 "1")
@@ -91,6 +110,7 @@ case $database in
         echo
 ;;
 *)
+        deps+=("gorm.io/driver/postgres")
         echo
 ;;
 esac
@@ -100,6 +120,8 @@ printf "Install jwt library (y/N)? "
 read -r jwt
 if [[ ${jwt,,} == "y" && -n "$jwt" ]]; then
         deps+=("github.com/dgrijalva/jwt-go")
+else 
+        echo "No"
 fi
 
 # Instaall validator
@@ -109,7 +131,7 @@ if [[ ${validator,,} == "y" && -n "$validator" ]]; then
         deps+=("github.com/go-playground/validator/v10")
         echo
 else 
-        echo
+        echo "N0"
 fi
 
 
@@ -125,15 +147,23 @@ if [ "$dirName" == "." ]; then
 	# Initialize go oroject
 	projectName=$(basename "$(pwd)")
 	go mod init "$projectName" &>/dev/null
+        echo "Installing dependencies...."
+        go get -u ${deps[@]} &>/dev/null
 
+        # install framwork
         if [[ " ${deps[@]} " =~ "github.com/gofiber/fiber/v2" ]]; then
                 source fiber.sh > main.go
         elif [[ " ${deps[@]} " =~ "github.com/gin-gonic/gin" ]]; then
                 source gin.sh > main.go
         fi
 
-        echo "Installing dependencies...."
-        go get -u ${deps[@]} &>/dev/null
+        # install db
+        if [[ " ${deps[@]} " =~ "gorm.io/driver/postgres" ]]; then
+                source  psql_db.sh > db/db.go
+
+        elif [[ " ${deps[@]} " =~ "gorm.io/driver/mysql" ]]; then
+                source  mysql_db.sh > db/db.go
+        fi
 
         echo ".env" > .gitignore
         echo "APP_PORT=8000" > .env
@@ -142,6 +172,8 @@ if [ "$dirName" == "." ]; then
         echo "DB_NAME=default" >> .env
         echo "DB_HOST=localhost" >> .env
         echo "DB_PORT=0000" >> .env
+
+        echo "Installing finised"
         
 else
         # Initialize folders
@@ -156,25 +188,24 @@ else
         # Initialize go oroject
         projectName=$(basename "$(pwd)")
         go mod init "$projectName" &>/dev/null
+        echo "Installing dependencies...."
+        go get -u ${deps[@]} &>/dev/null
 
         # Install framwork
         if [[ " ${deps[@]} " =~ "github.com/gofiber/fiber/v2" ]]; then
-                source ../fiber.sh > db/db.go
+                source ../fiber.sh > main.go
 
         elif [[ " ${deps[@]} " =~ "github.com/gin-gonic/gin" ]]; then
-                source ../gin.sh > db/db.go
+                source ../gin.sh > main.go
         fi
 
-        # install orm library
+        # install db
         if [[ " ${deps[@]} " =~ "gorm.io/driver/postgres" ]]; then
                 source ../psql_db.sh > db/db.go
 
         elif [[ " ${deps[@]} " =~ "gorm.io/driver/mysql" ]]; then
                 source ../mysql_db.sh > db/db.go
         fi
-
-        echo "Installing dependencies...."
-        go get -u ${deps[@]} &>/dev/null
 
         echo ".env" > .gitignore
         echo "APP_PORT=8000" > .env
@@ -183,6 +214,7 @@ else
         echo "DB_NAME=default" >> .env
         echo "DB_HOST=localhost" >> .env
         echo "DB_PORT=0000" >> .env
-        
-fi
 
+        echo "Installing finised"
+
+fi

@@ -16,22 +16,13 @@ func ConnectDB() *gorm.DB {
 			fmt.Println(err.Error())
 		}
 	}()
-	dbConfig := struct {
-		host,
-		port,
-		user,
-		pass,
-		name string
-	}{
-		host: os.Getenv("DB_HOST"),
-		port: os.Getenv("DB_PORT"),
-		user: os.Getenv("DB_USER"),
-		pass: os.Getenv("DB_PASSWORD"),
-		name: os.Getenv("DB_NAME"),
-	}
 
 	dsn := fmt.Sprintf("host=%s, port=%s, dbname=%s, password=%s, user=%s, sslmode=disable, TimeZone=Asia/Jakarta",
-		dbConfig.host, dbConfig.port, dbConfig.name, dbConfig.pass, dbConfig.user,
+    	os.Getenv("DB_HOST"),
+    	os.Getenv("DB_PORT"),
+    	os.Getenv("DB_NAME"),
+    	os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_USER"),
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
