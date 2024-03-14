@@ -56,6 +56,9 @@ case $framwork in
         deps+=("github.com/gin-gonic/gin")
         echo
 ;;
+"n")
+        echo
+;;
 *)
         deps+=("github.com/gofiber/fiber/v2")
         echo
@@ -78,6 +81,9 @@ fi
 case $orm in
 "1")
         deps+=("gorm.io/gorm")
+        echo
+;;
+"n")
         echo
 ;;
 *)
@@ -107,6 +113,9 @@ case $database in
 ;;
 "2")
         deps+=("gorm.io/driver/mysql")
+        echo
+;;
+"n")
         echo
 ;;
 *)
