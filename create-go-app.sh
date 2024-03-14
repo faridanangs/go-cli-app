@@ -8,11 +8,11 @@ $(date)
 EOF
 
 if [ $# -eq 0 ]; then
-        printf "package name: "
+        printf "nama package: "
         read -r package
 
         if [ -z "$package" ]; then
-                echo "package name should not be empty!"
+                echo "nama package tidak boleh kosong!"
                 exit 1
         fi
 else
@@ -24,7 +24,7 @@ mapfile -d "/" packagePart <<< "$package"
 dirName="${packagePart[-1]%?}"
 
 # Initialize git
-printf "Initialize git [y/N]? "
+printf "Inisialisasi git [y/N]? "
 read -r git
 
 if [ -z "$git" ]; then
@@ -35,7 +35,7 @@ deps=("github.com/joho/godotenv")
 
 # choise framwork
 cat <<EOF
-Choose your go framwork
+pilih framwork golang
 1. Fiber
 2. Gin
 n. none
@@ -67,7 +67,7 @@ esac
 
 # choise orm
 cat <<EOF
-Choose your orm library
+pilih library orm golang
 1. gorm
 n. none
 EOF
@@ -94,7 +94,7 @@ esac
 
 # choise database
 cat <<EOF
-Choose your database
+pilih database
 1. postgreSQL
 2. mySQL
 n. none
@@ -125,7 +125,7 @@ case $database in
 esac
 
 # Install jwt
-printf "Install jwt library (y/N)? "
+printf "Install library jwt (y/N)? "
 read -r jwt
 if [[ ${jwt,,} == "y" && -n "$jwt" ]]; then
         deps+=("github.com/dgrijalva/jwt-go")
@@ -134,7 +134,7 @@ else
 fi
 
 # Instaall validator
-printf "Install validator library (y/N)? "
+printf "Install library validator (y/N)? "
 read -r validator
 if [[ ${validator,,} == "y" && -n "$validator" ]]; then
         deps+=("github.com/go-playground/validator/v10")
@@ -156,7 +156,7 @@ if [ "$dirName" == "." ]; then
 	# Initialize go oroject
 	projectName=$(basename "$(pwd)")
 	go mod init "$projectName" &>/dev/null
-        echo "Installing dependencies...."
+        echo "Sedang menginstall dependensi...."
         go get -u ${deps[@]} &>/dev/null
 
         # install framwork
@@ -182,7 +182,7 @@ if [ "$dirName" == "." ]; then
         echo "DB_HOST=localhost" >> .env
         echo "DB_PORT=0000" >> .env
 
-        echo "Installing finised"
+        echo "Penginstalan selese"
         
 else
         # Initialize folders
@@ -197,7 +197,7 @@ else
         # Initialize go oroject
         projectName=$(basename "$(pwd)")
         go mod init "$projectName" &>/dev/null
-        echo "Installing dependencies...."
+        echo "Sedang menginstall dependensi...."
         go get -u ${deps[@]} &>/dev/null
 
         # Install framwork
@@ -224,6 +224,5 @@ else
         echo "DB_HOST=localhost" >> .env
         echo "DB_PORT=0000" >> .env
 
-        echo "Installing finised"
-
+        echo "Penginstalan selese"
 fi
