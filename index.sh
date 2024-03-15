@@ -65,8 +65,8 @@ case $framwork in
         echo
 ;;
 *)
-        deps+=("github.com/gofiber/fiber/v2")
-        echo
+        echo "*masukan dengan benar"
+        exit 1
 ;;
 esac
 
@@ -95,8 +95,8 @@ case $orm in
         echo
 ;;
 *)
-        deps+=("gorm.io/gorm")
-        echo
+        echo "*masukan dengan benar"
+        exit 1
 ;;
 esac
 
@@ -130,8 +130,8 @@ case $database in
         echo
 ;;
 *)
-        deps+=("gorm.io/driver/postgres")
-        echo
+        echo "*masukan dengan benar"
+        exit 1
 ;;
 esac
 
@@ -179,10 +179,9 @@ if [ "$dirName" == "." ]; then
 	go mod init "$projectName" &>/dev/null
 cat <<EOF
 
----------------------------------
-Sedang menginstall dependensi....
----------------------------------
-
+----------------------------------
+| Sedang menginstall dependensi...
+----------------------------------
 EOF
         go get -u ${deps[@]} &>/dev/null
 
@@ -255,7 +254,7 @@ import (
 func ConnectDB() *gorm.DB {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err.Error())
+			fmt.Println(err)
 		}
 	}()
 
@@ -294,7 +293,7 @@ import (
 func ConnectDB() *gorm.DB {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err.Error())
+			fmt.Println(err)
 		}
 	}()
 
@@ -331,13 +330,11 @@ fi
         echo "DB_PORT=0000" >> .env
 
 cat <<EOF
----------------------------------
-✓ Penginstallan selesai
 
-Untuk menjalankannya:
-1. cd nama_package
-2. go run main.go
+✓ Penginstallan selesai
 ---------------------------------
+# Untuk menjalankannya:
+1. go run main.go atau go run .
 
 EOF
         
@@ -365,10 +362,9 @@ else
         go mod init "$projectName" &>/dev/null
 cat <<EOF
 
----------------------------------
-Sedang menginstall dependensi....
----------------------------------
-
+-----------------------------------
+| Sedang menginstall dependensi....
+-----------------------------------
 EOF
         go get -u ${deps[@]} &>/dev/null
 
@@ -441,7 +437,7 @@ import (
 func ConnectDB() *gorm.DB {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err.Error())
+			fmt.Println(err)
 		}
 	}()
 
@@ -479,7 +475,7 @@ import (
 func ConnectDB() *gorm.DB {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err.Error())
+			fmt.Println(err)
 		}
 	}()
 
@@ -516,13 +512,12 @@ fi
         echo "DB_PORT=0000" >> .env
 
 cat <<EOF
----------------------------------
-✓ Penginstallan selesai
 
-Untuk menjalankannya
-cd nama_package
-go run main.go
+✓ Penginstallan selesai
 ---------------------------------
+# Untuk menjalankannya
+1. cd $dirName
+2. go run main.go atau go run .
 
 EOF
 fi
